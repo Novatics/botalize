@@ -9,10 +9,7 @@ suggestions, feel free to create an issue.
 
 ### Overview
 
-This tutorial provides steps for how to setup your first Facebook Chatbot using
-API.AI as your NLP (Natural Language Processor) and Node.js for backend operations
-that can't be done with API.AI. If you don't have any backend operation, just ignore
-the Node.js/Mongo.db sections.
+In this tutorial the API.AI is used as your NLP (Natural Language Processor) and Node.js for backend operations that can't be done with API.AI. If you don't have any backend operation, just ignore the Node.js/Mongo.db sections.
 
 The following picture shows an architectural overview of how the full example will
 operate. The API.AI interacts directly with the Facebook Messenger Platform, while
