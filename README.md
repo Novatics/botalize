@@ -1,9 +1,26 @@
-## Create and setup your Facebook Messenger Bot
+## Create and setup your Facebook Messenger Bot with API.AI, Node.js and Mongo.db
 
 The purpose of this repo is to provide instructions for how to setup a [Facebook Messenger
 Chatbot](https://developers.facebook.com/docs/messenger-platform) using
-[API.AI](https://api.ai/) and [Node.js](https://nodejs.org). If you have any question or
+[API.AI](https://api.ai/), [Node.js](https://nodejs.org) and
+[Mongo.db](https://www.mongodb.com/). If you have any question or
 suggestions, feel free to create an issue.
+
+
+### Overview
+
+This tutorial provides steps for how to setup your first Facebook Chatbot using
+API.AI as your NLP (Natural Language Processor) and Node.js for backend operations
+that can't be done with API.AI. If you don't have any backend operation, just ignore
+the Node.js/Mongo.db sections.
+
+The following picture shows an architectural overview of how the full example will
+operate. The API.AI interacts directly with the Facebook Messenger Platform, while
+the Node.js server will only interact directly to the Messenger Platform if
+notification messages are required.
+
+
+![alt text](https://github.com/Novatics/botalize/raw/master/images/overview.png "Facebook App")
 
 ### Setup the Facebook App
 
@@ -11,7 +28,8 @@ suggestions, feel free to create an issue.
 
     ![alt text](https://github.com/Novatics/botalize/raw/master/images/create-app-facebook.png "Facebook App")
 
-2. Go to the Messenger tab and select your Facebook Page to generate an Page Access Token.
+2. Go to the Messenger tab and select your Facebook Page to generate an Page
+Access Token. Make sure to save it somewhere.
 
     ![alt text](https://github.com/Novatics/botalize/raw/master/images/page-token-facebook.png "Facebook App")
 
