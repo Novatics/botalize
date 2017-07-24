@@ -89,6 +89,9 @@ data storage.
     var mongoose    = require('mongoose');
     var database    = require('./configs/database');
 
+    // Pull information from HTML POST (express4)
+    var bodyParser     = require('body-parser');
+    
     // Mongoose connection
     mongoose.connect(database[process.env.NODE_ENV].url);
 
