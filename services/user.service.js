@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const request = require('request');
 
 module.exports = {
   getFacebookData: getFacebookData,
@@ -11,8 +12,8 @@ function saveUser(facebookId, firstName, lastName) {
   getFacebookData(facebookId, function(err, userData){
     let user = {
       facebookId: facebookId,
-      firstName: firstName || userData.firstName,
-      lastName: lastName || userData.lastName
+      firstName: firstName || userData.first_name,
+      lastName: lastName || userData.last_name
     };
 
     User.collection.findOneAndUpdate({facebookId : facebookId}, user, {upsert:true}, function(err, user){

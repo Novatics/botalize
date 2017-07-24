@@ -49,6 +49,24 @@ Subscription Fields required for your bot interaction (check *messages* and
 
     ![alt text](https://github.com/Novatics/botalize/raw/master/images/webhook-approved-facebook.png "Facebook App")
 
+## <a name="apiai"></a> Setup API.AI
+
+1. Create an account at [API.AI](https://api.ai/), and create your first Agent.
+For more info about API.AI, check their [documentation](https://api.ai/docs/getting-started/basics).
+
+    ![alt text](https://github.com/Novatics/botalize/raw/master/images/api-ai-intent.png "Facebook App")
+
+2. Go to Integrations tab and setup the *Facebook messenger One-click integration*.
+The *Verify Token* can be any string, and the *Page Access Token* is the token
+generated at your *Facebook App*.
+
+    ![alt text](https://github.com/Novatics/botalize/raw/master/images/api-ai-facebook.png "Facebook App")
+
+3. Go to Fulfillment tab and setup the *Webhook* with your Heroku app url endpoint.
+After this setup, your can now enable the Webhook option at your intentions.
+
+    ![alt text](https://github.com/Novatics/botalize/raw/master/images/api-ai-webhook.png "Facebook App")
+
 ## <a name="nodejs"></a> Setup Node.js server
 
 If you don't want to follow this whole section, you can download this repo and
@@ -91,7 +109,7 @@ data storage.
 
     // Pull information from HTML POST (express4)
     var bodyParser     = require('body-parser');
-    
+
     // Mongoose connection
     mongoose.connect(database[process.env.NODE_ENV].url);
 
@@ -129,7 +147,7 @@ database.
     }
     ```  
 
-7. Create an api.ai.js file with the following code inside the directory /routes.
+7. Create an api-ai.js file with the following code inside the directory /routes.
 This file contains the webhook endpoint for API.AI, and the index endpoint.
 
     ```javascript
@@ -170,26 +188,6 @@ Access Token) to test the server locally.
     git push heroku master
     ```    
 
-
-## <a name="apiai"></a> Setup API.AI
-
-1. Create an account at [API.AI](https://api.ai/), and create your first Agent.
-For more info about API.AI, check their [documentation](https://api.ai/docs/getting-started/basics).
-
-    ![alt text](https://github.com/Novatics/botalize/raw/master/images/api-ai-intent.png "Facebook App")
-
-2. Go to Integrations tab and setup the *Facebook messenger One-click integration*.
-The *Verify Token* can be any string, and the *Page Access Token* is the token
-generated at your *Facebook App*.
-
-    ![alt text](https://github.com/Novatics/botalize/raw/master/images/api-ai-facebook.png "Facebook App")
-
-3. Go to Fulfillment tab and setup the *Webhook* with your Heroku app url endpoint.
-After this setup, your can now enable the Webhook option at your intentions.
-
-    ![alt text](https://github.com/Novatics/botalize/raw/master/images/api-ai-webhook.png "Facebook App")
-
-
 ## <a name="mongodb"></a> Using MongoDB
 
 1. Install MongoDB on your local environment using your favorite installer: https://docs.mongodb.com/manual/administration/install-community/
@@ -220,6 +218,7 @@ with our Chatbot. Create an user.js file inside /models with the following code:
 5. Create an user.service.js file inside /services with the following code:
     ```javascript
     const User = require('../models/user');
+    const request = require('request');
 
     module.exports = {
       getFacebookData: getFacebookData,
@@ -232,8 +231,8 @@ with our Chatbot. Create an user.js file inside /models with the following code:
       getFacebookData(facebookId, function(err, userData){
         let user = {
           facebookId: facebookId,
-          firstName: firstName || userData.firstName,
-          lastName: lastName || userData.lastName
+          firstName: firstName || userData.first_name,
+          lastName: lastName || userData.last_name
         };
 
         User.collection.findOneAndUpdate({facebookId : facebookId}, user, {upsert:true}, function(err, user){
