@@ -21,14 +21,15 @@ notification messages are required.
 
 ![alt text](https://github.com/Novatics/botalize/raw/master/images/overview.png "Facebook App")
 
-## Setup the Facebook App
+## <a name="facebook"></a> Setup the Facebook App
 
 1. Create your Facebook App at <https://developers.facebook.com/apps>
 
     ![alt text](https://github.com/Novatics/botalize/raw/master/images/create-app-facebook.png "Facebook App")
 
 2. Go to the Messenger tab and select your Facebook Page to generate an Page
-Access Token. Make sure to save it somewhere.
+Access Token. Make sure to save it somewhere, as it will be used in your Node.js
+sever.
 
     ![alt text](https://github.com/Novatics/botalize/raw/master/images/page-token-facebook.png "Facebook App")
 
@@ -56,10 +57,10 @@ update the environment variables and Heroku informations.
 1. First things first. We will use Heroku platform for deployment. As so,
 you will need a [Heroku](https://www.heroku.com) account and [Heroku
 toolbelt](https://devcenter.heroku.com/articles/heroku-cli#download-and-install)
-installed locally.
+installed locally. You will also need MongoDB to run the server locally.
 
 2. Install [Node](https://nodejs.org/). If you already have it installed,
-updated npm to the latest version.
+update npm to the latest version.
     ```
     sudo npm install npm -g
     ```
@@ -142,15 +143,17 @@ This file contains the webhook endpoint for API.AI, and the index endpoint.
     }
     ```
 
-10. Create an Procfile to tell Heroku where the server is.
+8. Create an Procfile to tell Heroku where the server is.
     ```
     web: node index.js
     ```
 
-9. Setup your local environment varibles to test the server locally.
+9. Setup your local environment variables(MongoDB, Node.js and Facebook Page
+Access Token) to test the server locally.
     ```
     export MONGODB_URI = mongodb://localhost/your-bot-database
     export NODE_ENV = development
+    export FB_PAGE_ACCESS_TOKEN = YOUR-FACEBOOK-PAGE-ACCESS-TOKEN
     ```
 
 10. Commit all code, install mLab MongoDB, and deploy to Heroku:
@@ -160,6 +163,7 @@ This file contains the webhook endpoint for API.AI, and the index endpoint.
     git commit --message "first commit"
     heroku create app-name
     heroku addons:create mongolab:sandbox
+    heroku config:set FB_PAGE_ACCESS_TOKEN=YOUR-FACEBOOK-PAGE-ACCESS-TOKEN
     git push heroku master
     ```    
 
@@ -183,4 +187,4 @@ After this setup, your can now enable the Webhook option at your intentions.
     ![alt text](https://github.com/Novatics/botalize/raw/master/images/api-ai-webhook.png "Facebook App")
 
 
-###TODO    
+## <a name="mongodb"></a> Using MongoDB
