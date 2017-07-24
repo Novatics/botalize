@@ -188,3 +188,98 @@ After this setup, your can now enable the Webhook option at your intentions.
 
 
 ## <a name="mongodb"></a> Using MongoDB
+
+1. Install MongoDB on your local environment using your favorite installer: https://docs.mongodb.com/manual/administration/install-community/
+
+2.  Install mLab MongoDB on your Heroku app, if you haven't done it before:
+    ```
+    heroku -a app-name addons:create mongolab:sandbox
+    ```
+3. Configure your _MONGODB_URI_ on your local environment you haven't done it before:
+    ```
+    export MONGODB_URI = mongodb://localhost/your-bot-database
+    ```
+4. In this project we are using [Mongoose](http://mongoosejs.com/docs/api.html),
+as so, we need to define the model's that we will persist. For simple
+demonstration we will persist the Facebook User data of every user that interacts
+with our Chatbot. Create an user.js file inside /models with the following code:
+
+    ```javascript
+    // Load mongoose since we need it to define a model
+    const mongoose = require('mongoose');
+
+    module.exports = mongoose.model('User', {
+      facebookId: { type: String, required: true },
+      firstName: String,
+      lastName: String
+    });
+    ```
+5. Create an user.service.js file inside /services with the following code:
+    ```javascript
+    const User = require('../models/user');
+
+    module.exports = {
+      getFacebookData: getFacebookData,
+      saveUser: saveUser
+    }
+
+    // Get user data Messenger Platform User Profile API and save it on the MongoDB
+    function saveUser(facebookId, firstName, lastName) {
+
+      getFacebookData(facebookId, function(err, userData){
+        let user = {
+          facebookId: facebookId,
+          firstName: firstName || userData.firstName,
+          lastName: lastName || userData.lastName
+        };
+
+        User.collection.findOneAndUpdate({facebookId : facebookId}, user, {upsert:true}, function(err, user){
+          if (err) console.log(err);
+          else console.log('user saved');
+        });
+      });
+    }
+
+    // Get User data from Messenger Platform User Profile API **NOT GRAPH API**
+    function getFacebookData(facebookId, callback) {
+
+      request({
+        method: 'GET',
+        url: 'https://graph.facebook.com/v2.8/' + facebookId,
+        qs: {
+          access_token: process.env.FB_PAGE_ACCESS_TOKEN
+        }
+      },
+
+      function(err, response, body) {
+
+        let userData = null
+        if (err) console.log(err);
+        else userData = JSON.parse(response.body);
+
+        callback(err, userData);
+      });
+    }
+    ```
+6. Update your api-ai.js file with the following code to to call the _saveUser_
+function from _user.service_ and save every user that interacts with the Chatbot:
+
+    ```javascript
+    const userService = require('../services/user.service');
+
+    module.exports = function(app) {
+      // Index route
+      app.get('/', function (req, res) {
+        res.send('Welcome to the Index Route');
+      });
+      // API.AI webhook route
+      app.post('/webhook/apiai/', function(req, res) {
+
+        // Your code for different actions sent by API.AI
+        res.status(200).json('Sucessfull');
+
+        // Save User to MongoDB
+        userService.saveUser(req.body.originalRequest.data.sender.id);
+      });
+    }
+    ```
